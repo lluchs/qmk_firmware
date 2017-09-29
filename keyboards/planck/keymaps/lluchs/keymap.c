@@ -21,6 +21,7 @@ extern keymap_config_t keymap_config;
 
 enum planck_layers {
   _QWERTY,
+  _QWERTY_GAMING,
   _LOWER,
   _RAISE,
   _ADJUST,
@@ -30,6 +31,7 @@ enum planck_layers {
 enum planck_keycodes {
   LOWER = SAFE_RANGE,
   RAISE,
+  SWBASE, // switch base layer (normal/gaming)
   FUNCTION,
   BACKLIT,
   RAI_GUI, // Raise + LGUI
@@ -55,14 +57,32 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |Shft/'|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | Ctrl | ↑-GUI| Alt  | GUI  |Lower |    Space    |Raise | AltGr| GUI  | Hyper| Ctrl |
+ * | Ctrl | ↑-GUI| GUI  | ALT  |Lower |    Space    |Raise | AltGr|SwBase| Hyper| Ctrl |
  * `-----------------------------------------------------------------------------------'
  */
 [_QWERTY] = {
   {KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC},
   {F(FUNESC), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT },
   {KC_LSFT,   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, SFTQUOT},
-  {KC_LCTL,   RAI_GUI, KC_LGUI, KC_LALT, LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_RALT, KC_RGUI, KC_HYPR, KC_RCTL}
+  {KC_LCTL,   RAI_GUI, KC_LGUI, KC_LALT, LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_RALT, SWBASE,  KC_HYPR, KC_RCTL}
+},
+
+/* Qwerty/Gaming
+ * ,-----------------------------------------------------------------------------------.
+ * | Tab  |   Q  |   W  |   E  |   R  |   T  |   Y  |   U  |   I  |   O  |   P  | Bksp |
+ * |------+------+------+------+------+-------------+------+------+------+------+------|
+ * |Esc/Fn|   A  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   ;  |Enter |
+ * |------+------+------+------+------+------|------+------+------+------+------+------|
+ * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |Shft/'|
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Ctrl | ↑-GUI| GUI  |Raise |Space |Lower |Space |Raise | AltGr|SwBase| Hyper| Ctrl |
+ * `-----------------------------------------------------------------------------------'
+ */
+[_QWERTY_GAMING] = {
+  {_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______},
+  {_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______},
+  {_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______},
+  {_______, _______, _______, RAISE,   KC_SPC,  LOWER,   KC_SPC,  RAISE,   _______, _______, _______, _______}
 },
 
 /* Lower
@@ -140,6 +160,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
+static float qwerty_song[][2] = SONG(QWERTY_SOUND);
+static float gaming_song[][2] = SONG(ZELDA_PUZZLE);
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case LOWER:
@@ -151,7 +174,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
       }
       return false;
-      break;
     case RAISE:
       if (record->event.pressed) {
         layer_on(_RAISE);
@@ -161,7 +183,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
       }
       return false;
-      break;
+    case SWBASE:
+      if (record->event.pressed) {
+        if (default_layer_state & (1 << _QWERTY)) {
+          default_layer_set(1 << _QWERTY_GAMING);
+          PLAY_SONG(gaming_song);
+        } else {
+          default_layer_set(1 << _QWERTY);
+          PLAY_SONG(qwerty_song);
+        }
+      }
+      return false;
     case FUNCTION:
       if (record->event.pressed) {
         layer_on(_FUNCTION);
@@ -169,7 +201,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         layer_off(_FUNCTION);
       }
       return false;
-      break;
     case RAI_GUI:
       if (record->event.pressed) {
         register_code(KC_LGUI);
