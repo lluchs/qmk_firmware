@@ -186,7 +186,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
     case SWBASE:
       if (record->event.pressed) {
-        if (default_layer_state & (1 << _QWERTY)) {
+        // default_layer_state is initially zero, but will have the _QWERTY bit
+        // set after switching once.
+        if (!default_layer_state || default_layer_state & (1 << _QWERTY)) {
           default_layer_set(1 << _QWERTY_GAMING);
           PLAY_SONG(gaming_song);
         } else {
