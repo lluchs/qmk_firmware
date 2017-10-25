@@ -26,6 +26,7 @@ enum planck_layers {
   _RAISE,
   _ADJUST,
   _FUNCTION,
+  _NUMGUI,
 };
 
 enum planck_keycodes {
@@ -34,7 +35,7 @@ enum planck_keycodes {
   SWBASE, // switch base layer (normal/gaming)
   FUNCTION,
   BACKLIT,
-  RAI_GUI, // Raise + LGUI
+  NUM_GUI, // Numbers + LGUI
 };
 
 enum fn_action_idx {
@@ -64,7 +65,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   {KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC},
   {F(FUNESC), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT },
   {KC_LSFT,   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, SFTQUOT},
-  {KC_LCTL,   RAI_GUI, KC_LGUI, KC_LALT, LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_RALT, SWBASE,  KC_HYPR, KC_RCTL}
+  {KC_LCTL,   NUM_GUI, KC_LGUI, KC_LALT, LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_RALT, SWBASE,  KC_HYPR, KC_RCTL}
 },
 
 /* Qwerty/Gaming
@@ -158,6 +159,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   {_______, _______, _______, _______, KC_ESC , _______, _______, KC_ESC , KC_HOME, KC_PGUP, KC_PGDN, KC_END}
 },
 
+/* Numbers with GUI - for switching workspaces in i3
+ * ,-----------------------------------------------------------------------------------.
+ * |      |   7  |   8  |   9  |   0  |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+-------------+------+------+------+------+------|
+ * |      |   4  |   5  |   6  |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------|------+------+------+------+------+------|
+ * |      |   1  |   2  |   3  |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |             |      |      |      |      |      |
+ * `-----------------------------------------------------------------------------------'
+ */
+[_NUMGUI] = {
+  {_______, KC_7,    KC_8,    KC_9,    KC_0,    _______, _______, _______, _______, _______, _______, _______},
+  {_______, KC_4,    KC_5,    KC_6,    _______, _______, _______, _______, _______, _______, _______, _______},
+  {_______, KC_1,    KC_2,    KC_3,    _______, _______, _______, _______, _______, _______, _______, _______},
+  {_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______} 
+},
 
 };
 
@@ -204,13 +222,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         layer_off(_FUNCTION);
       }
       return false;
-    case RAI_GUI:
+    case NUM_GUI:
       if (record->event.pressed) {
         register_code(KC_LGUI);
-        layer_on(_RAISE);
+        layer_on(_NUMGUI);
       } else {
         unregister_code(KC_LGUI);
-        layer_off(_RAISE);
+        layer_off(_NUMGUI);
       }
       return false;
   }
