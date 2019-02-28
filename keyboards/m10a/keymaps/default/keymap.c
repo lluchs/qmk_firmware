@@ -1,5 +1,3 @@
-// This is the canonical layout file for the Quantum project. If you want to add another keyboard,
-// this is the style you want to emulate.
 
 #include "m10a.h"
 #include "action_layer.h"
@@ -24,10 +22,6 @@ enum layers {
   _LAYER8,
   _LAYER9
 };
-
-// // Fillers to make layering more clear
-// #define _______ KC_TRNS
-// #define XXXXXXX KC_NO
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_LAYER0] = {{KC_A, KC_B, KC_C}, {KC_D, KC_E, KC_F}, {KC_G, KC_H, KC_I}, {KC_NO, KC_NO, KC_J}},
