@@ -20,7 +20,7 @@ extern keymap_config_t keymap_config;
 
 enum planck_layers {
   _QWERTY,
-  _QWERTY_GAMING,
+  _NEO,
   _PROGRAMMING,
   _LOWER,
   _RAISE,
@@ -33,7 +33,7 @@ enum planck_keycodes {
   LOWER = SAFE_RANGE,
   SHLOWER,
   RAISE,
-  SWBASE, // switch base layer (normal/gaming)
+  SWBASE, // switch base layer (normal/neo)
   FUNCTION,
   BACKLIT,
   NUM_GUI, // Numbers + LGUI
@@ -70,7 +70,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   {KC_LCTL,   MO_PROG, KC_LGUI, KC_LALT, LOWER,   SHLOWER, KC_SPC,  RAISE,   KC_RALT, SWBASE,  MO_PROG, KC_RCTL}
 },
 
-/* Qwerty/Gaming
+/* Neo. Requires the Neo layout in software and just changes some modifiers around.
+ * TODO: @ in top-left
  * ,-----------------------------------------------------------------------------------.
  * | Tab  |   Q  |   W  |   E  |   R  |   T  |   Y  |   U  |   I  |   O  |   P  | Bksp |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
@@ -78,14 +79,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |Shift |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | Ctrl | ↑-GUI| GUI  |Raise |Space |Lower |Space |Raise | AltGr|SwBase| Hyper| Ctrl |
+ * | Ctrl |>Progr| GUI  | ALT  |Lower |    Space    |Raise | AltGr|SwBase|>Progr| Ctrl |
  * `-----------------------------------------------------------------------------------'
  */
-[_QWERTY_GAMING] = {
+[_NEO] = {
   {_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______},
   {_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______},
   {_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______},
-  {_______, _______, _______, RAISE,   KC_SPC,  LOWER,   KC_SPC,  RAISE,   _______, _______, _______, _______}
+  {_______, KC_CLCK, _______, _______, _______, _______, _______, _______, _______, _______, KC_BSLS, _______}
 },
 
 /* Neo-like programming layer for US-QUERTY keyboard layout
@@ -202,7 +203,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 static float qwerty_song[][2] = SONG(QWERTY_SOUND);
-static float gaming_song[][2] = SONG(ZELDA_PUZZLE);
+static float neo_song[][2] = SONG(ZELDA_PUZZLE);
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
@@ -236,8 +237,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         // default_layer_state is initially zero, but will have the _QWERTY bit
         // set after switching once.
         if (!default_layer_state || default_layer_state & (1 << _QWERTY)) {
-          default_layer_set(1 << _QWERTY_GAMING);
-          PLAY_SONG(gaming_song);
+          default_layer_set(1 << _NEO);
+          PLAY_SONG(neo_song);
         } else {
           default_layer_set(1 << _QWERTY);
           PLAY_SONG(qwerty_song);
