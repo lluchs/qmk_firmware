@@ -4,3 +4,4 @@ endif
 
 NKRO_ENABLE = yes
 LTO_ENABLE = yes
+VIRTSER_ENABLE = yes

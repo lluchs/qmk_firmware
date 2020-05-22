@@ -15,6 +15,7 @@
  */
 
 #include QMK_KEYBOARD_H
+#include "virtser.h"
 
 extern keymap_config_t keymap_config;
 
@@ -196,7 +197,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 static float qwerty_song[][2] = SONG(QWERTY_SOUND);
-static float neo_song[][2] = SONG(ZELDA_PUZZLE);
+static float neo_song[][2] = SONG(MAJOR_SOUND);
+static float error_song[][2] = SONG(S__NOTE(_E7));
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
@@ -257,3 +259,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
   return true;
 }
+
+#ifdef VIRTSER_ENABLE
+void virtser_recv(const uint8_t ch) {
+  switch (ch) {
+    case 'N': // Neo
+      default_layer_set(1 << _NEO);
+      PLAY_SONG(neo_song);
+      break;
+    case 'Q': // QWERTY
+      default_layer_set(1 << _QWERTY);
+      PLAY_SONG(qwerty_song);
+      break;
+    default: // unknown command
+      PLAY_SONG(error_song);
+      virtser_send(ch);
+  }
+}
+#endif
