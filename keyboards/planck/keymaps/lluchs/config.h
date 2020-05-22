@@ -36,4 +36,9 @@
 
 #define FORCE_NKRO
 
+/* No locking */
+#undef LOCKING_SUPPORT_ENABLE
+
+#define NO_ACTION_ONESHOT
+
 #endif

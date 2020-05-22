@@ -39,14 +39,7 @@ enum planck_keycodes {
   NUM_GUI, // Numbers + LGUI
 };
 
-enum fn_action_idx {
-  FUNESC,
-};
-
-const uint16_t PROGMEM fn_actions[] = {
-  [FUNESC] = ACTION_LAYER_TAP_KEY(_FUNCTION, KC_ESC),
-};
-
+#define FUNESC LT(_FUNCTION, KC_ESC)
 #define SFTQUOT MT(MOD_RSFT, KC_QUOT)
 #define MO_PROG MO(_PROGRAMMING)
 
@@ -64,10 +57,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_QWERTY] = {
-  {KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC},
-  {F(FUNESC), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT },
-  {KC_LSFT,   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, SFTQUOT},
-  {KC_LCTL,   MO_PROG, KC_LGUI, KC_LALT, LOWER,   SHLOWER, KC_SPC,  RAISE,   KC_RALT, SWBASE,  MO_PROG, KC_RCTL}
+  {KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC},
+  {FUNESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT },
+  {KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, SFTQUOT},
+  {KC_LCTL, MO_PROG, KC_LGUI, KC_LALT, LOWER,   SHLOWER, KC_SPC,  RAISE,   KC_RALT, SWBASE,  MO_PROG, KC_RCTL}
 },
 
 /* Neo. Requires the Neo layout in software and just changes some modifiers around.

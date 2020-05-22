@@ -3,3 +3,4 @@ ifndef QUANTUM_DIR
 endif
 
 NKRO_ENABLE = yes
+LTO_ENABLE = yes
